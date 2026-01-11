@@ -1,15 +1,18 @@
 package com.example.task11_ya;
 
-import android.content.DialogInterface; // ייבוא חסר שנוסף
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog; // שינוי לייבוא המתאים יותר
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -21,8 +24,25 @@ public class MainActivity extends AppCompatActivity
     Button btnStyle;
     Button btnFood;
     Button btnMessage;
+    Button btnReset;
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_credits)
+        {
+            Intent intent = new Intent(this, Credits.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,6 +53,15 @@ public class MainActivity extends AppCompatActivity
         mainLayout = findViewById(R.id.main);
         btnFood = findViewById(R.id.btn2);
         btnMessage = findViewById(R.id.btn3);
+        btnReset = findViewById(R.id.btn4);
+
+        btnReset.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                openResetDialog();
+            }
+        });
 
         btnMessage.setOnClickListener(new View.OnClickListener()
         {
@@ -58,6 +87,32 @@ public class MainActivity extends AppCompatActivity
                 openStyleDialog();
             }
         });
+    }
+    private void openResetDialog()
+    {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Reset Planning");
+        adb.setMessage("Are you sure you want to reset all choices?");
+        adb.setCancelable(false);
+        adb.setPositiveButton("Yes", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                mainLayout.setBackgroundColor(Color.WHITE);
+                summaryTextView.setText("");
+                Toast.makeText(MainActivity.this, "Planning has been reset!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        adb.setNegativeButton("No", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        adb.create().show();
     }
     private void openNameDialog()
     {
