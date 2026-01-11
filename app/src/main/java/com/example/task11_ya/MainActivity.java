@@ -5,7 +5,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog; // שינוי לייבוא המתאים יותר
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,8 @@ public class MainActivity extends AppCompatActivity
     ConstraintLayout mainLayout;
     Button btnStyle;
     Button btnFood;
+    Button btnMessage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,7 +32,16 @@ public class MainActivity extends AppCompatActivity
         summaryTextView = findViewById(R.id.sicom);
         mainLayout = findViewById(R.id.main);
         btnFood = findViewById(R.id.btn2);
+        btnMessage = findViewById(R.id.btn3);
 
+        btnMessage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                openNameDialog();
+            }
+        });
         btnFood.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -46,6 +59,35 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+    private void openNameDialog()
+    {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Personal Message");
+        adb.setCancelable(false);
+        final EditText eT = new EditText(this);
+        eT.setHint("Enter your name here");
+        adb.setView(eT);
+        adb.setPositiveButton("OK", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String userName = eT.getText().toString();
+                String message = "Enjoy your outing, " + userName + "!";
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+        adb.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.cancel();
+            }
+        });
+        adb.create().show();
+    }
+
     private void openFoodDialog()
     {
         final String[] items = {"Popcorn", "Soda", "Chips", "Chocolate", "Water"};
